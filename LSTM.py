@@ -140,3 +140,6 @@ if __name__ == "__main__":
     X = X_test[103] # random sample from data
     y = y_test[103]
     predict(model, X, y)
+
+    # Save the model
+    model.save("dementia_model.keras")
