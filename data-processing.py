@@ -2,10 +2,9 @@ import json
 import os
 import math
 import librosa
-import spafe.features.gfcc as gfcc
 
 
-DATASET_PATH = "/Users/andrewmalanowicz/Documents/instabot/dementiabank" # path to dementia bank recording folder
+DATASET_PATH = "PATH/TO/FOLDER" # path to dementia bank recording folder
 JSON_PATH = "data.json"
 SAMPLE_RATE = 22050
 TRACK_DURATION = 30 # measured in seconds
@@ -28,11 +27,7 @@ def save_mfcc(dataset_path, json_path, num_mfcc=13, n_fft=2048, hop_length=512, 
     data = {
         "mapping": [],
         "labels": [],
-        "mfcc": [],
-        # "mfcc_delta": [],
-        # "gtcc": [],
-        # "gtcc_delta": [],
-        # "log_energy": []
+        "mfcc": []
     }
 
     samples_per_segment = int(SAMPLES_PER_TRACK / num_segments)
@@ -66,31 +61,12 @@ def save_mfcc(dataset_path, json_path, num_mfcc=13, n_fft=2048, hop_length=512, 
 
                             # extract mfcc
                             mfcc = librosa.feature.mfcc(y=signal[start:finish], sr=sample_rate, n_mfcc=num_mfcc, n_fft=n_fft, hop_length=hop_length)
-                            # mfcc_delta = librosa.feature.delta(data=mfcc)
                             mfcc = mfcc.T
-                            # mfcc_delta = mfcc_delta.T
-
-                            # gtcc = gfcc.gfcc(signal[start:finish], fs=16000, num_ceps=13)
-                            #gtcc_delta = librosa.feature.delta(data=gfcc)
-                            # gtcc = gtcc.T
-                            # gtcc_delta = gtcc_delta.T
-
-                            # energy = librosa.feature.melspectrogram(y=signal[start:finish], sr=sample_rate, power=1)
-                            # log_energy = librosa.core.amplitude_to_db(energy)
-                            # log_energy = log_energy.T
-
-                            # fundamental_frequency = librosa.zero_crossings(y=signal[start:finish])
-
-                            # formants = librosa.core(y=signal[start:finish], sr=sample_rate)
                             
 
                             # store only mfcc feature with expected number of vectors
                             if len(mfcc) == num_mfcc_vectors_per_segment:
                                 data["mfcc"].append(mfcc.tolist())
-                                # data["mfcc_delta"].append(mfcc_delta.tolist())
-                                # data["gtcc"].append(gtcc.tolist())
-                                # data["gtcc_delta"].append(gtcc_delta.tolist())
-                                # data["log_energy"].append(log_energy.tolist())
                                 data["labels"].append(i-1)
                                 print("{}, segment:{}".format(file_path, d+1))
                             
@@ -103,4 +79,4 @@ def save_mfcc(dataset_path, json_path, num_mfcc=13, n_fft=2048, hop_length=512, 
         
         
 if __name__ == "__main__":
-    save_mfcc(DATASET_PATH, JSON_PATH, num_segments=10)
+    save_mfcc(DATASET_PATH, JSON_PATH, num_segments=5)
